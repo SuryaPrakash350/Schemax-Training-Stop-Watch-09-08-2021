@@ -1,95 +1,49 @@
-class Stopwatch {
-  constructor(display, results) {
-      this.running = false;
-      this.display = display;
-      this.results = results;
-      this.laps = [];
-      this.reset();
-      this.print(this.times);
-  }
+window.onload = function () {
   
-  reset() {
-      this.times = [ 0, 0, 0 ];
-  }
+    var seconds = 00; 
+    var tens = 00; 
+    var appendTens = document.getElementById("tens")
+    var appendSeconds = document.getElementById("seconds")
+    var buttonStart = document.getElementById('button-start');
+    var buttonStop = document.getElementById('button-stop');
+    var buttonReset = document.getElementById('button-reset');
+    var Interval ;
   
-  start() {
-      if (!this.time) this.time = performance.now();
-      if (!this.running) {
-          this.running = true;
-          requestAnimationFrame(this.step.bind(this));
-      }
-  }
-  
-  lap() {
-      let times = this.times;
-      let li = document.createElement('li');
-      li.innerText = this.format(times);
-      this.results.appendChild(li);
-  }
-  
-  stop() {
-      this.running = false;
-      this.time = null;
-  }
+    buttonStart.onclick = function() {
+      
+       clearInterval(Interval);
+       Interval = setInterval(startTimer, 10);
+    }
+    
+      buttonStop.onclick = function() {
+         clearInterval(Interval);
+    }
 
-  restart() {
-      if (!this.time) this.time = performance.now();
-      if (!this.running) {
-          this.running = true;
-          requestAnimationFrame(this.step.bind(this));
-      }
-      this.reset();
-  }
-  
-  clear() {
-      clearChildren(this.results);
-  }
-  
-  step(timestamp) {
-      if (!this.running) return;
-      this.calculate(timestamp);
-      this.time = timestamp;
-      this.print();
-      requestAnimationFrame(this.step.bind(this));
-  }
-  
-  calculate(timestamp) {
-      var diff = timestamp - this.time;
-      this.times[2] += diff / 10;
-      if (this.times[2] >= 100) {
-          this.times[1] += 1;
-          this.times[2] -= 100;
-      }
-      if (this.times[1] >= 60) {
-          this.times[0] += 1;
-          this.times[1] -= 60;
-      }
-  }
-  
-  print() {
-      this.display.innerText = this.format(this.times);
-  }
-  
-  format(times) {
-      return `\
-${pad0(times[0], 2)}:\
-${pad0(times[1], 2)}:\
-${pad0(Math.floor(times[2]), 2)}`;
-  }
-}
+    buttonReset.onclick = function() {
+       clearInterval(Interval);
+      tens = "00";
+        seconds = "00";
+      appendTens.innerHTML = tens;
+        appendSeconds.innerHTML = seconds;
+    }
 
-function pad0(value, count) {
-  var result = value.toString();
-  for (; result.length < count; --count)
-      result = '0' + result;
-  return result;
-}
-
-function clearChildren(node) {
-  while (node.lastChild)
-      node.removeChild(node.lastChild);
-}
-
-let stopwatch = new Stopwatch(
-  document.querySelector('.stopwatch'),
-  document.querySelector('.results'));
+    function startTimer () {
+      tens++; 
+      if(tens <= 9){
+        appendTens.innerHTML = "0" + tens;
+      }
+      if (tens > 9){
+        appendTens.innerHTML = tens; 
+      }
+      if (tens > 99) {
+        console.log("seconds");
+        seconds++;
+        appendSeconds.innerHTML = "0" + seconds;
+        tens = 0;
+        appendTens.innerHTML = "0" + 0;
+      }
+      if (seconds > 9){
+        appendSeconds.innerHTML = seconds;
+      }
+    }
+  }
